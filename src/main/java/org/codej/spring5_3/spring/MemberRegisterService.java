@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
 public class MemberRegisterService {
     private MemberDAO memberDAO;
 
-
+    public MemberRegisterService(MemberDAO memberDAO) {
+        this.memberDAO = memberDAO;
+    }
 
     public Long register(RegisterRequest req){
 

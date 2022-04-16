@@ -4,7 +4,11 @@ public class ChangePasswordService {
 
     private MemberDAO memberDAO;
 
-    public void changePassword(String email,String oldPassword,String newPassword){
+    public ChangePasswordService(MemberDAO memberDAO) {
+        this.memberDAO = memberDAO;
+    }
+
+    public void changePassword(String email, String oldPassword, String newPassword){
         Member member = memberDAO.selectByEmail(email);
         if(member == null){
             throw new MemberNotFoundException();
@@ -13,7 +17,5 @@ public class ChangePasswordService {
 
         memberDAO.update(member);
     }
-    public void setMemberDAO(MemberDAO memberDAO){
-        this.memberDAO=memberDAO;
-    }
+
 }

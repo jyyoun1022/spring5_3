@@ -16,9 +16,18 @@ public class MainForAssembler {
             System.out.println("명령어를 입력하시오.");
 
             String command = reader.readLine();
+
             if(command.equalsIgnoreCase("exit")){
                 System.out.println("종료합니다.");
                 break;
+            }
+            if(command.equalsIgnoreCase("findAll")){
+                System.out.println("전체 검색을 시작합니다.");
+                processFindAllCommand();
+            }
+            if(command.equalsIgnoreCase("find")){
+                System.out.println();
+                processFindCommand(command.split(" "));
             }
             if(command.startsWith("new ")){
                 processNewCommand(command.split(" "));
@@ -28,6 +37,7 @@ public class MainForAssembler {
                 processChangeCommand(command.split(" "));
                 continue;
             }
+
             printHelp();
 
         }
@@ -71,6 +81,14 @@ public class MainForAssembler {
         }catch (WrongidPasswordException e){
             System.out.println("이메일과 암호가 일치하지 않습니다.\n");
         }
+    }
+    private static void processFindCommand(String[] arg){
+        MemberDAO memberDAO = new MemberDAO();
+        memberDAO.read(arg[1]);
+    }
+    private static void processFindAllCommand(){
+        MemberDAO memberDAO = new MemberDAO();
+        memberDAO.AllRead();
     }
     private static void printHelp(){
         System.out.println();
