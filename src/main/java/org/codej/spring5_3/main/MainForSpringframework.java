@@ -1,6 +1,7 @@
 package org.codej.spring5_3.main;
 
 import org.codej.spring5_3.config.AppCtx;
+import org.codej.spring5_3.spring.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -20,9 +21,70 @@ public class MainForSpringframework {
 
         while(true){
             System.out.println("명령어를 입력하세요");
+
             String command = reader.readLine();
 
+            if(command.equalsIgnoreCase("exit")){
+                System.out.println("종료하겠습니다..");
+                break;
+
+            }
+            if(command.startsWith("new ")){
+                processNewCommand(command.split(" "));
+                continue;
+            }else if(command.startsWith("change ")){
+                processChangeCommand(command.split(" "));
+                continue;
+            }
+            printHelp();
+
+        }
+    }
+    private static void processNewCommand(String[] arg){
+        if(arg.length != 5){
+            printHelp();
+            return;
+        }
+        MemberRegisterService regSvc = ctx.getBean("memberRegSvc", MemberRegisterService.class);
+        RegisterRequest req = new RegisterRequest();
+        req.setEmail(arg[1]);
+        req.setName(arg[2]);
+        req.setPassword(arg[3]);
+        req.setConfirmPassword(arg[4]);
+
+        if(!req.isPasswordEqualToConfirmPassword()){
+            System.out.println("암호의 확인이 필요합니다.");
+            return;
+        }
+        try{
+            regSvc.register(req);
+            System.out.println("등록되었습니다.");
+        }catch (DuplicateMemberException e){
+            System.out.println("이미 존재하는 이메일 입니다.");
+        }
+    }
+    private static void processChangeCommand(String[] arg){
+        if(arg.length != 5){
+            printHelp();
+            return;
+        }
+        ChangePasswordService changePwdSvc = ctx.getBean("changePwdSvc", ChangePasswordService.class);
+        try{
+            changePwdSvc.changePassword(arg[1],arg[2],arg[3]);
+            System.out.println("암호를 변경했습니다.");
+        }catch (MemberNotFoundException e){
+            System.out.println("일치하는 이메일이 없습니다.");
+        }catch( WrongidPasswordException e){
+            System.out.println("이메일과 암호가 일치하지 않습니다.");
         }
 
+    }
+    private static void printHelp(){
+        System.out.println();
+        System.out.println("잘못된 명령입니다.아래 명령어 사용범을 확인하세요");
+        System.out.println("명령어 사용법:");
+        System.out.println("new 이메일 이름 암호 암호확인");
+        System.out.println("change 이메일 현재비번 변경할비번");
+        System.out.println();
     }
 }
