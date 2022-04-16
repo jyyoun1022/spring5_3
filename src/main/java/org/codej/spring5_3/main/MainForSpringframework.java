@@ -1,5 +1,7 @@
 package org.codej.spring5_3.main;
 
+import org.codej.spring5_3.config.AppConfig1;
+import org.codej.spring5_3.config.AppConfig2;
 import org.codej.spring5_3.config.AppCtx;
 import org.codej.spring5_3.spring.*;
 import org.springframework.context.ApplicationContext;
@@ -11,11 +13,11 @@ import java.io.InputStreamReader;
 
 public class MainForSpringframework {
 
-    private static ApplicationContext ctx = null;
+    private static ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig1.class, AppConfig2.class);
 
     public static void main(String[] args)throws IOException {
 
-        ctx = new AnnotationConfigApplicationContext(AppCtx.class);
+
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -34,6 +36,15 @@ public class MainForSpringframework {
                 continue;
             }else if(command.startsWith("change ")){
                 processChangeCommand(command.split(" "));
+                continue;
+            }else if(command.startsWith("list")){
+                processListCommand();
+                continue;
+            }else if(command.startsWith("info")){
+                processInfoCommand(command.split(" "));
+                continue;
+            }else if(command.startsWith("check version")){
+                processCheckCommand();
                 continue;
             }
             printHelp();
@@ -78,6 +89,26 @@ public class MainForSpringframework {
             System.out.println("이메일과 암호가 일치하지 않습니다.");
         }
 
+    }
+
+    private static void processListCommand(){
+        MemberListPrinter listPrinter = ctx.getBean("listPrinter", MemberListPrinter.class);
+        listPrinter.printAll();
+    }
+
+    private static void processInfoCommand(String[] arg){
+        if(arg.length != 2){
+            printHelp();
+            return;
+        }
+
+        MemberInfoPrinter infoPrinter = ctx.getBean("infoPrinter", MemberInfoPrinter.class);
+        infoPrinter.printMemberInfo(arg[1]);
+    }
+
+    private static void processCheckCommand(){
+        VersionPrinter versionPrinter = ctx.getBean("versionPrinter", VersionPrinter.class);
+        versionPrinter.print();
     }
     private static void printHelp(){
         System.out.println();

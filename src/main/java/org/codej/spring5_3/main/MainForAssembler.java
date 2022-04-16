@@ -21,14 +21,7 @@ public class MainForAssembler {
                 System.out.println("종료합니다.");
                 break;
             }
-            if(command.equalsIgnoreCase("findAll")){
-                System.out.println("전체 검색을 시작합니다.");
-                processFindAllCommand();
-            }
-            if(command.equalsIgnoreCase("find")){
-                System.out.println();
-                processFindCommand(command.split(" "));
-            }
+
             if(command.startsWith("new ")){
                 processNewCommand(command.split(" "));
                 continue;
@@ -82,14 +75,7 @@ public class MainForAssembler {
             System.out.println("이메일과 암호가 일치하지 않습니다.\n");
         }
     }
-    private static void processFindCommand(String[] arg){
-        MemberDAO memberDAO = new MemberDAO();
-        memberDAO.read(arg[1]);
-    }
-    private static void processFindAllCommand(){
-        MemberDAO memberDAO = new MemberDAO();
-        memberDAO.AllRead();
-    }
+
     private static void printHelp(){
         System.out.println();
         System.out.println("잘못된 명령입니다.아래 명령어 사용범을 확인하세요");
